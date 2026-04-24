@@ -1,21 +1,30 @@
 public class QuantityMeasurementApp {
+
+    public static void demonstrateLengthConversion(double value, LengthUnit from, LengthUnit to) {
+        double result = QuantityLength.convert(value, from, to);
+        System.out.println("Converted: " + result);
+    }
+
+    public static void demonstrateLengthConversion(QuantityLength length, LengthUnit to) {
+        QuantityLength converted = length.convertTo(to);
+        System.out.println("Converted: " + converted);
+    }
+
+    public static void demonstrateLengthEquality(QuantityLength q1, QuantityLength q2) {
+        System.out.println("Equal: " + q1.equals(q2));
+    }
+
     public static void main(String[] args) {
 
-        System.out.println(
-                new QuantityLength(1.0, LengthUnit.YARDS)
-                        .equals(new QuantityLength(3.0, LengthUnit.FEET))
-        ); // true
+        demonstrateLengthConversion(1.0, LengthUnit.FEET, LengthUnit.INCH); // 12
+        demonstrateLengthConversion(3.0, LengthUnit.YARDS, LengthUnit.FEET); // 9
 
-        System.out.println(
-                new QuantityLength(1.0, LengthUnit.YARDS)
-                        .equals(new QuantityLength(36.0, LengthUnit.INCH))
-        ); // true
+        QuantityLength q = new QuantityLength(36.0, LengthUnit.INCH);
+        demonstrateLengthConversion(q, LengthUnit.YARDS); // 1
 
-        System.out.println(
-                new QuantityLength(1.0, LengthUnit.CENTIMETER)
-                        .equals(new QuantityLength(0.393701, LengthUnit.INCH))
-        ); // true
+        demonstrateLengthEquality(
+                new QuantityLength(1.0, LengthUnit.FEET),
+                new QuantityLength(12.0, LengthUnit.INCH)
+        );
     }
 }
-    // Inner class Feet
-

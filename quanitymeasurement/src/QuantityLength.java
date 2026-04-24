@@ -1,23 +1,60 @@
 public class QuantityLength {
 
-    public QuantityLength(double v, LengthUnit lengthUnit) {
+    private final double value;
+    private final LengthUnit unit;
+
+    public QuantityLength(double value, LengthUnit unit) {
+        if (unit == null)
+            throw new IllegalArgumentException("Unit cannot be null");
+
+        if (!Double.isFinite(value))
+            throw new IllegalArgumentException("Invalid numeric value");
+
+        this.value = value;
+        this.unit = unit;
     }
 
-    public static void main(String[] args) {
+    private double toFeet() {
+        return unit.toFeet(value);
+    }
 
-        System.out.println(
-                new QuantityLength(1.0, LengthUnit.YARDS)
-                        .equals(new QuantityLength(3.0, LengthUnit.FEET))
-        ); // true
+    // 🔥 Instance conversion method
+    public QuantityLength convertTo(LengthUnit targetUnit) {
+        if (targetUnit == null)
+            throw new IllegalArgumentException("Target unit cannot be null");
 
-        System.out.println(
-                new QuantityLength(1.0, LengthUnit.YARDS)
-                        .equals(new QuantityLength(36.0, LengthUnit.INCH))
-        ); // true
+        double baseFeet = this.toFeet();
+        double convertedValue = targetUnit.fromFeet(baseFeet);
 
-        System.out.println(
-                new QuantityLength(1.0, LengthUnit.CENTIMETER)
-                        .equals(new QuantityLength(0.393701, LengthUnit.INCH))
-        ); // true
+        return new QuantityLength(convertedValue, targetUnit);
+    }
+
+    // 🔥 Static API method (important for UC5)
+    public static double convert(double value, LengthUnit source, LengthUnit target) {
+
+        if (source == null || target == null)
+            throw new IllegalArgumentException("Units cannot be null");
+
+        if (!Double.isFinite(value))
+            throw new IllegalArgumentException("Invalid numeric value");
+
+        double feetValue = source.toFeet(value);
+        return target.fromFeet(feetValue);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        QuantityLength other = (QuantityLength) obj;
+
+        return Double.compare(this.toFeet(), other.toFeet()) == 0;
+    }
+
+    @Override
+    public String toString() {
+        return value + " " + unit;
     }
 }
