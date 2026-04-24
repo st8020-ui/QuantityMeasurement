@@ -1,35 +1,27 @@
-public class QuantityMeasurementApp {
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-    public static void main(String[] args) {
+class QuantityMeasurementAppTest {
 
-        QuantityLength f = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength i = new QuantityLength(12.0, LengthUnit.INCH);
-        QuantityLength y = new QuantityLength(1.0, LengthUnit.YARDS);
-        QuantityLength c = new QuantityLength(2.54, LengthUnit.CENTIMETER);
+    private static final double EPS = 1e-3;
 
-        // Equality
-        System.out.println("1 ft == 12 inch: " + f.equals(i));
+    @Test
+    void testLengthEquality() {
+        assertTrue(new QuantityLength(1.0, LengthUnit.FEET)
+                .equals(new QuantityLength(12.0, LengthUnit.INCH)));
+    }
 
-        // Conversion
-        System.out.println("1 ft in inches: " + f.convertTo(LengthUnit.INCH));
-        System.out.println("1 yard in feet: " + y.convertTo(LengthUnit.FEET));
+    @Test
+    void testWeightEquality() {
+        assertTrue(new QuantityWeight(1.0, WeightUnit.KILOGRAM)
+                .equals(new QuantityWeight(1000.0, WeightUnit.GRAM)));
+    }
 
-        // Addition (UC6)
-        System.out.println("1 ft + 12 inch (feet): " + f.add(i));
-        System.out.println("12 inch + 1 ft (inch): " + i.add(f));
-
-        // Addition with target unit (UC7)
-        System.out.println("1 ft + 12 inch (inches): " +
-                QuantityLength.add(f, i, LengthUnit.INCH));
-
-        System.out.println("1 ft + 12 inch (yards): " +
-                QuantityLength.add(f, i, LengthUnit.YARDS));
-
-        // CM example
-        System.out.println("2.54 cm in inch: " +
-                c.convertTo(LengthUnit.INCH));
-
-        System.out.println("2.54 cm + 1 inch (cm): " +
-                QuantityLength.add(c, i, LengthUnit.CENTIMETER));
+    @Test
+    void testWeightConversion() {
+        assertEquals(2.20462,
+                new QuantityWeight(1.0, WeightUnit.KILOGRAM)
+                        .convertTo(WeightUnit.POUND).getValue(),
+                EPS);
     }
 }

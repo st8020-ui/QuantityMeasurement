@@ -1,9 +1,10 @@
-public class QuantityLength {
+public class QuantityWeight {
 
     private final double value;
-    private final LengthUnit unit;
+    private final WeightUnit unit;
 
-    public QuantityLength(double value, LengthUnit unit) {
+    public QuantityWeight(double value, WeightUnit unit) {
+
         if (unit == null)
             throw new IllegalArgumentException("Unit cannot be null");
 
@@ -18,7 +19,7 @@ public class QuantityLength {
         return value;
     }
 
-    public LengthUnit getUnit() {
+    public WeightUnit getUnit() {
         return unit;
     }
 
@@ -26,27 +27,24 @@ public class QuantityLength {
         return unit.convertToBaseUnit(value);
     }
 
-    // UC5
-    public QuantityLength convertTo(LengthUnit targetUnit) {
+    public QuantityWeight convertTo(WeightUnit targetUnit) {
         if (targetUnit == null)
             throw new IllegalArgumentException("Target unit cannot be null");
 
         double base = this.toBase();
         double converted = targetUnit.convertFromBaseUnit(base);
 
-        return new QuantityLength(converted, targetUnit);
+        return new QuantityWeight(converted, targetUnit);
     }
 
-    // UC6
-    public QuantityLength add(QuantityLength other) {
+    public QuantityWeight add(QuantityWeight other) {
         return add(this, other, this.unit);
     }
 
-    // UC7
-    public static QuantityLength add(
-            QuantityLength a,
-            QuantityLength b,
-            LengthUnit targetUnit) {
+    public static QuantityWeight add(
+            QuantityWeight a,
+            QuantityWeight b,
+            WeightUnit targetUnit) {
 
         if (a == null || b == null)
             throw new IllegalArgumentException("Operands cannot be null");
@@ -57,16 +55,16 @@ public class QuantityLength {
         double sum = a.toBase() + b.toBase();
         double result = targetUnit.convertFromBaseUnit(sum);
 
-        return new QuantityLength(result, targetUnit);
+        return new QuantityWeight(result, targetUnit);
     }
 
-    // UC3
     @Override
     public boolean equals(Object obj) {
+
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
 
-        QuantityLength other = (QuantityLength) obj;
+        QuantityWeight other = (QuantityWeight) obj;
 
         return Double.compare(this.toBase(), other.toBase()) == 0;
     }
