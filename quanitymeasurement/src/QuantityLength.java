@@ -1,36 +1,23 @@
 public class QuantityLength {
 
-    private final double value;
-    private final LengthUnit unit;
-
-    public QuantityLength(double value, LengthUnit unit) {
-        if (unit == null) {
-            throw new IllegalArgumentException("Unit cannot be null");
-        }
-        this.value = value;
-        this.unit = unit;
+    public QuantityLength(double v, LengthUnit lengthUnit) {
     }
 
-    // Convert to base unit (feet)
-    private double toFeet() {
-        return unit.toFeet(value);
-    }
+    public static void main(String[] args) {
 
-    @Override
-    public boolean equals(Object obj) {
+        System.out.println(
+                new QuantityLength(1.0, LengthUnit.YARDS)
+                        .equals(new QuantityLength(3.0, LengthUnit.FEET))
+        ); // true
 
-        if (this == obj) return true;
+        System.out.println(
+                new QuantityLength(1.0, LengthUnit.YARDS)
+                        .equals(new QuantityLength(36.0, LengthUnit.INCH))
+        ); // true
 
-        if (obj == null || getClass() != obj.getClass()) return false;
-
-        QuantityLength other = (QuantityLength) obj;
-
-        // Compare after conversion
-        return Double.compare(this.toFeet(), other.toFeet()) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        return Double.hashCode(toFeet());
+        System.out.println(
+                new QuantityLength(1.0, LengthUnit.CENTIMETER)
+                        .equals(new QuantityLength(0.393701, LengthUnit.INCH))
+        ); // true
     }
 }
