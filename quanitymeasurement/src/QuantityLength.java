@@ -1,6 +1,6 @@
 public class QuantityLength {
 
-    private final double value;
+    final double value;
     private final LengthUnit unit;
 
     public QuantityLength(double value, LengthUnit unit) {
@@ -14,37 +14,38 @@ public class QuantityLength {
         this.unit = unit;
     }
 
-    private double toFeet() {
+    double toFeet() {
         return unit.toFeet(value);
     }
 
-    // 🔥 Instance conversion method
-    public QuantityLength convertTo(LengthUnit targetUnit) {
-        if (targetUnit == null)
-            throw new IllegalArgumentException("Target unit cannot be null");
+    // 🔥 UC6: Addition (instance method)
+    public QuantityLength add(QuantityLength other) {
 
-        double baseFeet = this.toFeet();
-        double convertedValue = targetUnit.fromFeet(baseFeet);
+        if (other == null)
+            throw new IllegalArgumentException("Other length cannot be null");
 
-        return new QuantityLength(convertedValue, targetUnit);
+        double sumFeet = this.toFeet() + other.toFeet();
+
+        // Convert result back to this object's unit
+        double resultValue = this.unit.fromFeet(sumFeet);
+
+        return new QuantityLength(resultValue, this.unit);
     }
 
-    // 🔥 Static API method (important for UC5)
-    public static double convert(double value, LengthUnit source, LengthUnit target) {
+    // 🔥 Optional static version (flexible API)
+    public static QuantityLength add(QuantityLength a, QuantityLength b, LengthUnit targetUnit) {
 
-        if (source == null || target == null)
-            throw new IllegalArgumentException("Units cannot be null");
+        if (a == null || b == null || targetUnit == null)
+            throw new IllegalArgumentException("Invalid input");
 
-        if (!Double.isFinite(value))
-            throw new IllegalArgumentException("Invalid numeric value");
+        double sumFeet = a.toFeet() + b.toFeet();
+        double result = targetUnit.fromFeet(sumFeet);
 
-        double feetValue = source.toFeet(value);
-        return target.fromFeet(feetValue);
+        return new QuantityLength(result, targetUnit);
     }
 
     @Override
     public boolean equals(Object obj) {
-
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
 
@@ -56,5 +57,20 @@ public class QuantityLength {
     @Override
     public String toString() {
         return value + " " + unit;
+    }
+
+
+    public QuantityLength convertTo(LengthUnit targetUnit) {
+
+        if (targetUnit == null)
+            throw new IllegalArgumentException("Target unit cannot be null");
+
+        // Step 1: convert current value → feet
+        double valueInFeet = this.unit.toFeet(this.value);
+
+        // Step 2: convert feet → target unit
+        double convertedValue = targetUnit.fromFeet(valueInFeet);
+
+        return new QuantityLength(convertedValue, targetUnit);
     }
 }
