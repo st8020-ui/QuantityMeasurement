@@ -14,7 +14,6 @@ public class QuantityLength {
         this.unit = unit;
     }
 
-    // Getter (IMPORTANT for tests)
     public double getValue() {
         return value;
     }
@@ -23,28 +22,28 @@ public class QuantityLength {
         return unit;
     }
 
-    // Convert to base (feet)
+    // Convert to base unit (feet)
     private double toFeet() {
-        return unit.toFeet(value);
+        return unit.convertToBaseUnit(value);
     }
 
-    // ✅ UC5: convert to another unit
+    // ✅ UC5: Conversion
     public QuantityLength convertTo(LengthUnit targetUnit) {
         if (targetUnit == null)
             throw new IllegalArgumentException("Target unit cannot be null");
 
         double feet = this.toFeet();
-        double converted = targetUnit.fromFeet(feet);
+        double converted = targetUnit.convertFromBaseUnit(feet);
 
         return new QuantityLength(converted, targetUnit);
     }
 
-    // ✅ UC6: add (result in same unit as THIS object)
+    // ✅ UC6: Add (same unit as this)
     public QuantityLength add(QuantityLength other) {
         return add(this, other, this.unit);
     }
 
-    // ✅ UC7: add with TARGET UNIT
+    // ✅ UC7: Add with target unit
     public static QuantityLength add(
             QuantityLength a,
             QuantityLength b,
@@ -57,12 +56,12 @@ public class QuantityLength {
             throw new IllegalArgumentException("Target unit cannot be null");
 
         double sumFeet = a.toFeet() + b.toFeet();
-        double result = targetUnit.fromFeet(sumFeet);
+        double result = targetUnit.convertFromBaseUnit(sumFeet);
 
         return new QuantityLength(result, targetUnit);
     }
 
-    // Equality (UC3)
+    // ✅ UC3: Equality
     @Override
     public boolean equals(Object obj) {
 
